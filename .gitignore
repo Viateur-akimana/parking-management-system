@@ -11,8 +11,8 @@
 /._plates_log.csv
 /._webcam_detect.py
 /._yolov8n.pt
+/._car_entry.py
 /arrange_dataset.py
-/car_entry.py
 /car_exit.py
 /crop_plate_extract.py
 /crop_plate_extract_orig.py
