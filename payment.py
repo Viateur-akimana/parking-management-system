@@ -124,7 +124,3 @@ if __name__ == "__main__":
             writer.writerow(['Plate Number', 'Payment Status', 'Timestamp'])
 
     main()
-
-
-
-

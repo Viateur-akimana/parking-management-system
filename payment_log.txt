@@ -1,9 +1,5 @@
-2025-05-06 15:10:41 - Plate: RAH972U, Status: NO_PENDING_HOURS, Old Balance: 7528, New Balance: 7528
-2025-05-06 15:10:42 - Plate: RAH972U, Status: NO_PENDING_HOURS, Old Balance: 7528, New Balance: 7528
-2025-05-06 15:10:43 - Error: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
-2025-05-06 15:12:17 - RAH972U - Status: NO_PENDING_HOURS, Old Balance: 7528, New Balance: 7528
-2025-05-06 15:12:23 - RAH972U - Status: NO_PENDING_HOURS, Old Balance: 7528, New Balance: 7528
-2025-05-06 15:14:29 - RAH972U - Status: NO_PENDING_HOURS, Old Balance: 7528, New Balance: 7528
-2025-05-06 15:17:43 - RAH972U - Status: NO_PENDING_HOURS, Old Balance: 7528, New Balance: 7528
-2025-05-06 15:17:48 - RAH972U - Status: NO_PENDING_HOURS, Old Balance: 7528, New Balance: 7528
-2025-05-06 15:18:18 - RAH972U - Status: SUCCESS, Old Balance: 7528, New Balance: 5528
+2025-05-10 21:01:06 - RAB123A - Status: NO_PENDING_HOURS, Old Balance: 23664, New Balance: 23664
+2025-05-10 21:01:21 - RAB123A - Status: NO_PENDING_HOURS, Old Balance: 23664, New Balance: 23664
+2025-05-10 21:02:02 - RAB123A - Status: NO_PENDING_HOURS, Old Balance: 23664, New Balance: 23664
+2025-05-10 21:02:27 - RAB123A - Status: SUCCESS, Old Balance: 23664, New Balance: 23264
+2025-05-10 21:10:47 - RAB123A - Status: SUCCESS, Old Balance: 23264, New Balance: 22864
