@@ -13,7 +13,6 @@
 /._yolov8n.pt
 /._car_entry.py
 /arrange_dataset.py
-/car_exit.py
 /crop_plate_extract.py
 /crop_plate_extract_orig.py
 /crop_plate_extract_orig1.py
