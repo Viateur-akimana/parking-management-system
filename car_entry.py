@@ -35,7 +35,7 @@ if not os.path.exists(CSV_FILE):
 
 print("[SYSTEM] Ready. Press 'q' to exit.")
 
-# ===== Auto-detect Arduino Serial Port =====
+# ===== Auto-detect Arduino Serial Port =====ca
 def detect_arduino_port():
     for dev in glob.glob("/dev/ttyACM*") + glob.glob("/dev/ttyUSB*"):
         return dev

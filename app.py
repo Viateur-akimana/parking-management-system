@@ -10,11 +10,9 @@ from datetime import datetime
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# File paths
 CSV_FILE = 'plates_log.csv'
 PAYMENT_LOG = 'payment_log.txt'
 
-# System stats
 system_stats = {
     "total_vehicles": 0,
     "paid_vehicles": 0,
