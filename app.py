@@ -15,6 +15,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 CSV_FILE = 'plates_log.csv'
 PAYMENT_LOG = 'payment_log.txt'
 EXIT_LOG = 'exit_log.csv'
+SECURITY_LOG_FILE = 'security_alerts.csv'
 
 # Enhanced system stats
 system_stats = {
@@ -117,10 +118,11 @@ def update_system_stats():
         print(f"Error updating stats: {e}")
 
 def watch_logs():
-    """Enhanced log monitoring for all system components"""
+    """Enhanced log monitoring for all system components including security alerts"""
     last_csv_size = 0
     last_payment_size = 0
     last_exit_size = 0
+    last_security_size = 0  # NEW: Track security alerts
     
     while True:
         try:
@@ -198,6 +200,37 @@ def watch_logs():
                 update_system_stats()
                 socketio.emit('stats_update', system_stats)
                 last_exit_size = current_exit_size
+            
+            # NEW: Monitor security alerts
+            current_security_size = os.path.getsize(SECURITY_LOG_FILE) if os.path.exists(SECURITY_LOG_FILE) else 0
+            if current_security_size != last_security_size:
+                if os.path.exists(SECURITY_LOG_FILE):
+                    with open(SECURITY_LOG_FILE, 'r') as f:
+                        lines = f.readlines()
+                        if len(lines) > 1:  # Skip header
+                            last_line = lines[-1].strip()
+                            parts = last_line.split(',')
+                            if len(parts) >= 6:
+                                timestamp = parts[0]
+                                plate = parts[1]
+                                alert_type = parts[2]
+                                action_taken = parts[4]
+                                
+                                # Create security alert for dashboard
+                                security_alert = {
+                                    'timestamp': timestamp,
+                                    'type': 'SECURITY_ALERT',
+                                    'plate': plate,
+                                    'details': f'{alert_type}: {action_taken}',
+                                    'status': 'ERROR',
+                                    'alert_type': alert_type
+                                }
+                                
+                                # Emit to dashboard
+                                socketio.emit('security_alert', security_alert)
+                                log_activity('SECURITY_ALERT', plate, f'{alert_type} - {action_taken}', 'ERROR')
+                
+                last_security_size = current_security_size
             
             time.sleep(1)
         except Exception as e:
@@ -303,6 +336,22 @@ def get_vehicles_inside():
     
     return jsonify(vehicles_inside)
 
+@app.route('/security-alerts')
+def get_security_alerts():
+    """Get security alerts from CSV"""
+    alerts = []
+    try:
+        if os.path.exists(SECURITY_LOG_FILE):
+            with open(SECURITY_LOG_FILE, 'r') as f:
+                reader = csv.DictReader(f)
+                alerts = [row for row in reader]
+    except FileNotFoundError:
+        # Create empty security alerts file
+        with open(SECURITY_LOG_FILE, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Timestamp', 'Plate Number', 'Alert Type', 'Status', 'Action Taken', 'Personnel Notified'])
+    return jsonify(alerts)
+
 # Socket events
 @socketio.on('connect')
 def on_connect():
@@ -349,6 +398,11 @@ if __name__ == '__main__':
     if not os.path.exists(PAYMENT_LOG):
         open(PAYMENT_LOG, 'w').close()
     
+    if not os.path.exists(SECURITY_LOG_FILE):
+        with open(SECURITY_LOG_FILE, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Timestamp', 'Plate Number', 'Alert Type', 'Status', 'Action Taken', 'Personnel Notified'])
+    
     create_exit_log_if_not_exists()
     
     # Start log watcher thread
@@ -356,6 +410,6 @@ if __name__ == '__main__':
     
     print("🚗 Smart Parking Management System Web Interface")
     print("🌐 Access dashboard at: http://localhost:5000")
-    print("📊 Real-time monitoring: Entry | Payment | Exit")
+    print("📊 Real-time monitoring: Entry | Payment | Exit | Security")
     
     socketio.run(app, debug=True, host='0.0.0.0', port=5000)

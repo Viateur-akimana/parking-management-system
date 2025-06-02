@@ -13,6 +13,7 @@
             --warning: #fd7e14;
             --info: #17a2b8;
             --primary: #007bff;
+            --critical: #8B0000;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -41,7 +42,7 @@
             color: white;
         }
         .log-container {
-            height: 350px;
+            height: 400px;
             overflow-y: auto;
             background: white;
             border-radius: 10px;
@@ -66,6 +67,35 @@
         .activity-payment { border-left-color: var(--success); }
         .activity-exit { border-left-color: var(--info); }
         .activity-alert { border-left-color: var(--error); }
+        .activity-security { border-left-color: var(--critical); }
+        
+        /* Security Alert Styles */
+        .security-alert-item {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border: 2px solid var(--error);
+            border-left: 6px solid var(--critical);
+            animation: securityPulse 2s infinite;
+        }
+        .security-alert-critical {
+            background: linear-gradient(135deg, #ffe1e1 0%, #ffb3b3 100%);
+            border: 3px solid var(--critical);
+            border-left: 8px solid var(--critical);
+            animation: criticalPulse 1s infinite;
+        }
+        .security-alert-high {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border: 2px solid var(--warning);
+            border-left: 6px solid var(--warning);
+        }
+        
+        @keyframes securityPulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3); }
+            50% { box-shadow: 0 8px 25px rgba(220, 53, 69, 0.6); }
+        }
+        @keyframes criticalPulse {
+            0%, 100% { box-shadow: 0 6px 20px rgba(139, 0, 0, 0.5); }
+            50% { box-shadow: 0 12px 35px rgba(139, 0, 0, 0.8); }
+        }
         
         .status-success { color: var(--success); }
         .status-error { color: var(--error); }
@@ -93,6 +123,140 @@
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+        
+        .security-badge {
+            position: relative;
+        }
+        .security-badge .notification-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--critical);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* NEW: Security Alerts Table Styles */
+        .security-table-container {
+            max-height: 500px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .security-row-standard {
+            background: rgba(255, 193, 7, 0.1);
+        }
+        
+        .security-row-high {
+            background: rgba(255, 87, 34, 0.15);
+        }
+        
+        .security-row-critical {
+            background: rgba(244, 67, 54, 0.2);
+            animation: criticalRowPulse 3s infinite;
+        }
+        
+        @keyframes criticalRowPulse {
+            0%, 100% { background: rgba(244, 67, 54, 0.2); }
+            50% { background: rgba(244, 67, 54, 0.35); }
+        }
+        
+        .alert-badge-standard {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .alert-badge-high {
+            background: var(--error);
+            color: white;
+            animation: badgePulse 2s infinite;
+        }
+        
+        .alert-badge-critical {
+            background: var(--critical);
+            color: white;
+            animation: criticalBadgePulse 1s infinite;
+        }
+        
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes criticalBadgePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 5px rgba(139, 0, 0, 0.5); }
+            50% { transform: scale(1.1); box-shadow: 0 0 15px rgba(139, 0, 0, 0.8); }
+        }
+
+        /* NEW: Enhanced Card Layout */
+        .main-card {
+            height: 450px;
+            margin-bottom: 30px;
+        }
+
+        .main-card .card-body {
+            height: calc(100% - 60px);
+            padding: 0;
+        }
+
+        /* Bottom Tables Spacing */
+        .bottom-tables-section {
+            margin: 40px 0;
+            padding: 0 20px;
+        }
+
+        /* Responsive Card Heights */
+        @media (max-width: 768px) {
+            .main-card {
+                height: auto;
+                min-height: 350px;
+            }
+            .log-container {
+                height: 300px;
+            }
+        }
+
+        /* Enhanced Card Spacing */
+        .main-cards-section {
+            margin: 0 30px; /* Add left and right spacing for cards */
+        }
+
+        /* Bottom Tables Enhanced Spacing */
+        .bottom-tables-section {
+            margin: 40px 60px; /* Large left/right margins for tables */
+            padding: 0;
+        }
+
+        .bottom-table-item {
+            margin-bottom: 25px; /* Small spacing between tables */
+        }
+
+        /* Responsive spacing adjustments */
+        @media (max-width: 1200px) {
+            .main-cards-section {
+                margin: 0 20px;
+            }
+            .bottom-tables-section {
+                margin: 40px 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-cards-section {
+                margin: 0 15px;
+            }
+            .bottom-tables-section {
+                margin: 30px 20px;
+            }
+            .bottom-table-item {
+                margin-bottom: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -102,7 +266,10 @@
             <a class="navbar-brand" href="#">
                 <i class="bi bi-car-front-fill"></i> Smart Parking System
             </a>
-            <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto d-flex align-items-center">
+                <div id="security-status" class="badge bg-success text-white me-3">
+                    <i class="bi bi-shield-check"></i> Secure
+                </div>
                 <div id="connection-status" class="badge bg-warning text-dark">
                     <i class="bi bi-wifi"></i> Connecting...
                 </div>
@@ -149,7 +316,6 @@
                     <small class="text-muted">Pending Payment</small>
                 </div>
             </div>
-
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="stats-card text-center">
                     <div class="stat-icon bg-secondary mx-auto mb-3">
@@ -159,122 +325,263 @@
                     <small class="text-muted">Exited</small>
                 </div>
             </div>
+            <!-- Security Alerts Card -->
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stats-card text-center security-badge">
+                    <div class="stat-icon bg-danger mx-auto mb-3">
+                        <i class="bi bi-shield-exclamation"></i>
+                    </div>
+                    <h3 id="security-alerts" class="mb-1">0</h3>
+                    <small class="text-muted">Security Alerts</small>
+                    <div id="alert-notification" class="notification-count" style="display: none;">0</div>
+                </div>
+            </div>
         </div>
 
-        <div class="row">
-            <!-- Left Column -->
-            <div class="col-lg-4">
-                <!-- Real-time Activities -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-white border-0">
-                        <h5 class="mb-0">
-                            <i class="bi bi-activity text-primary"></i> 
-                            Real-time Activities
-                        </h5>
+        <!-- NEW: 2x2 Main Cards Layout with Enhanced Spacing -->
+        <div class="main-cards-section">
+            <div class="row">
+                <!-- Top Left: Live Security Alerts -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card border-0 shadow-sm main-card">
+                        <div class="card-header bg-danger text-white border-0 d-flex justify-content-between">
+                            <h5 class="mb-0">
+                                <i class="bi bi-shield-exclamation"></i> 
+                                🚨 Live Security Alerts
+                            </h5>
+                            <button id="clear-alerts" class="btn btn-sm btn-outline-light">
+                                <i class="bi bi-trash"></i> Clear
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="log-container" id="security-alerts-log">
+                                <div class="text-center text-muted py-4">
+                                    <i class="bi bi-shield-check"></i> No security alerts
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body p-0">
-                        <div class="log-container" id="activities-log">
-                            <div class="text-center text-muted py-4">
-                                <i class="bi bi-hourglass-split"></i> Waiting for activities...
+                </div>
+
+                <!-- Top Right: System Activities -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card border-0 shadow-sm main-card">
+                        <div class="card-header bg-white border-0">
+                            <h5 class="mb-0">
+                                <i class="bi bi-activity text-primary"></i> 
+                                System Activities
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="log-container" id="activities-log">
+                                <div class="text-center text-muted py-4">
+                                    <i class="bi bi-hourglass-split"></i> Waiting for activities...
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Middle Column -->
-            <div class="col-lg-4">
-                <!-- Vehicles Inside -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-white border-0 d-flex justify-content-between">
-                        <h5 class="mb-0">
-                            <i class="bi bi-car-front text-success"></i> 
-                            Vehicles Inside
-                        </h5>
-                        <button id="refresh-inside" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </button>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-container">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light sticky-top">
-                                    <tr>
-                                        <th>Plate</th>
-                                        <th>Duration</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="vehicles-inside-table">
-                                    <tr>
-                                        <td colspan="3" class="text-center text-muted py-4">
-                                            Loading...
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Column -->
-            <div class="col-lg-4">
-                <!-- Recent Transactions -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-white border-0">
-                        <h5 class="mb-0">
-                            <i class="bi bi-credit-card text-warning"></i> 
-                            Recent Transactions
-                        </h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="log-container" id="transactions-log">
-                            <div class="text-center text-muted py-4">
-                                <i class="bi bi-receipt"></i> Loading transactions...
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Detection Logs Table -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-white border-0 d-flex justify-content-between">
-                        <h5 class="mb-0">
-                            <i class="bi bi-list-check text-info"></i> 
-                            System Logs
-                        </h5>
-                        <div>
-                            <button id="refresh-logs" class="btn btn-sm btn-outline-primary me-2">
+            <div class="row">
+                <!-- Bottom Left: Vehicles Inside -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card border-0 shadow-sm main-card">
+                        <div class="card-header bg-white border-0 d-flex justify-content-between">
+                            <h5 class="mb-0">
+                                <i class="bi bi-car-front text-success"></i> 
+                                Vehicles Inside Parking
+                            </h5>
+                            <button id="refresh-inside" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-arrow-clockwise"></i> Refresh
                             </button>
-                            <span id="last-update" class="text-muted small">Just now</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light sticky-top">
+                                        <tr>
+                                            <th><i class="bi bi-car-front"></i> Plate Number</th>
+                                            <th><i class="bi bi-clock"></i> Duration</th>
+                                            <th><i class="bi bi-credit-card"></i> Payment Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="vehicles-inside-table">
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted py-4">
+                                                <i class="bi bi-hourglass-split"></i> Loading vehicles...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body p-0">
-                        <div class="table-container">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light sticky-top">
-                                    <tr>
-                                        <th>Plate Number</th>
-                                        <th>Payment Status</th>
-                                        <th>Entry Time</th>
-                                        <th>Duration</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="system-logs-table">
-                                    <tr>
-                                        <td colspan="5" class="text-center text-muted py-4">
-                                            Loading system logs...
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                </div>
+
+                <!-- Bottom Right: Recent Transactions -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card border-0 shadow-sm main-card">
+                        <div class="card-header bg-white border-0">
+                            <h5 class="mb-0">
+                                <i class="bi bi-credit-card text-warning"></i> 
+                                Recent Transactions
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="log-container" id="transactions-log">
+                                <div class="text-center text-muted py-4">
+                                    <i class="bi bi-receipt"></i> Loading transactions...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Tables Section with Enhanced Spacing -->
+        <div class="bottom-tables-section">
+            <!-- System Logs Table -->
+            <div class="row bottom-table-item">
+                <div class="col-12">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-primary text-white border-0 d-flex justify-content-between">
+                            <h5 class="mb-0">
+                                <i class="bi bi-list-check"></i> 
+                                📊 System Entry & Payment Logs
+                            </h5>
+                            <div>
+                                <button id="refresh-logs" class="btn btn-sm btn-outline-light me-2">
+                                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                                </button>
+                                <span id="last-update" class="text-light small">Just now</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-container">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-primary sticky-top">
+                                        <tr>
+                                            <th><i class="bi bi-car-front"></i> Plate Number</th>
+                                            <th><i class="bi bi-credit-card"></i> Payment Status</th>
+                                            <th><i class="bi bi-calendar-event"></i> Entry Time</th>
+                                            <th><i class="bi bi-clock-history"></i> Duration</th>
+                                            <th><i class="bi bi-tools"></i> Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="system-logs-table">
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted py-4">
+                                                <i class="bi bi-hourglass-split"></i> Loading system logs...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light border-0">
+                            <div class="row text-center">
+                                <div class="col-md-4">
+                                    <small class="text-muted">
+                                        <i class="bi bi-info-circle text-primary"></i>
+                                        Real-time entry and payment tracking
+                                    </small>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">
+                                        <i class="bi bi-shield-check text-success"></i>
+                                        Secure payment verification
+                                    </small>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">
+                                        <i class="bi bi-clock text-warning"></i>
+                                        Auto-calculated duration and fees
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Alerts Table -->
+            <div class="row bottom-table-item">
+                <div class="col-12">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-danger text-white border-0 d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-shield-exclamation"></i> 
+                                🚨 Security Alerts & Unauthorized Exit Attempts
+                            </h5>
+                            <div class="d-flex align-items-center">
+                                <span id="total-security-alerts" class="badge bg-light text-dark me-3">
+                                    Total: 0 alerts
+                                </span>
+                                <button id="refresh-security-table" class="btn btn-sm btn-outline-light me-2">
+                                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                                </button>
+                                <button id="clear-security-table" class="btn btn-sm btn-outline-light">
+                                    <i class="bi bi-trash"></i> Clear All
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="security-table-container">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-dark sticky-top">
+                                        <tr>
+                                            <th><i class="bi bi-calendar-event"></i> Timestamp</th>
+                                            <th><i class="bi bi-car-front"></i> Plate Number</th>
+                                            <th><i class="bi bi-shield-exclamation"></i> Alert Type</th>
+                                            <th><i class="bi bi-gear"></i> Action Taken</th>
+                                            <th><i class="bi bi-person-badge"></i> Personnel</th>
+                                            <th><i class="bi bi-activity"></i> Status</th>
+                                            <th><i class="bi bi-tools"></i> Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="security-alerts-table">
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted py-5">
+                                                <i class="bi bi-shield-check" style="font-size: 3rem; color: #28a745;"></i>
+                                                <div class="mt-3">
+                                                    <h6>No security alerts recorded</h6>
+                                                    <small class="text-muted">All exit attempts have been authorized</small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light border-0">
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <span class="badge alert-badge-standard me-2">Standard</span>
+                                        <small>First unauthorized attempt (5s buzzer)</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <span class="badge alert-badge-high me-2">High Priority</span>
+                                        <small>Repeated attempts 2+ (5s buzzer)</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <span class="badge alert-badge-critical me-2">Critical</span>
+                                        <small>Multiple violations 3+ (5s buzzer)</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-info-circle text-info me-2"></i>
+                                        <small>All alerts: 5-second alarm duration</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -288,6 +595,8 @@
         // Initialize Socket.IO connection
         const socket = io();
         let isConnected = false;
+        let securityAlerts = [];
+        let alertCount = 0;
 
         // Connection status
         socket.on('connect', () => {
@@ -314,7 +623,20 @@
 
         socket.on('new_activity', (activity) => {
             addActivityItem(activity);
+            
+            // Check if it's a security alert
+            if (activity.type === 'SECURITY_ALERT' || activity.details.includes('UNAUTHORIZED')) {
+                addSecurityAlert(activity);
+            }
+            
             updateLastUpdateTime();
+        });
+
+        socket.on('security_alert', (alert) => {
+            addSecurityAlert(alert);
+            updateSecurityStatus(false);
+            // Also refresh the security table
+            fetchSecurityAlertsTable();
         });
 
         socket.on('new_transaction', (data) => {
@@ -329,6 +651,222 @@
             document.getElementById('paid-vehicles').textContent = stats.paid_vehicles || 0;
             document.getElementById('pending-payments').textContent = stats.pending_payments || 0;
             document.getElementById('vehicles-exited').textContent = stats.vehicles_exited || 0;
+            document.getElementById('security-alerts').textContent = alertCount;
+        }
+
+        // Security Alert Functions
+        function addSecurityAlert(alert) {
+            const container = document.getElementById('security-alerts-log');
+            
+            if (container.children.length === 1 && container.children[0].classList.contains('text-center')) {
+                container.innerHTML = '';
+            }
+
+            securityAlerts.unshift(alert);
+            alertCount++;
+
+            const alertEl = document.createElement('div');
+            
+            // Determine alert severity styling
+            let alertClass = 'security-alert-item';
+            let severityIcon = '<i class="bi bi-exclamation-triangle-fill text-danger"></i>';
+            
+            if (alert.type === 'CRITICAL_SECURITY_BREACH' || alert.details.includes('CRITICAL')) {
+                alertClass = 'security-alert-critical';
+                severityIcon = '<i class="bi bi-shield-x text-danger"></i>';
+            } else if (alert.type === 'HIGH_PRIORITY_ALERT' || alert.details.includes('HIGH PRIORITY')) {
+                alertClass = 'security-alert-high';
+                severityIcon = '<i class="bi bi-shield-exclamation text-warning"></i>';
+            }
+            
+            alertEl.className = `activity-item ${alertClass}`;
+            
+            alertEl.innerHTML = `
+                <div class="me-3">${severityIcon}</div>
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between">
+                        <strong class="text-danger">${alert.plate || 'UNKNOWN'}</strong>
+                        <span class="badge bg-danger">UNAUTHORIZED EXIT</span>
+                    </div>
+                    <div class="fw-bold text-danger">${alert.type || 'SECURITY BREACH'}</div>
+                    <small class="text-muted">${alert.details || 'Unauthorized exit attempt detected'}</small>
+                    <div class="text-muted small">
+                        <i class="bi bi-clock"></i> ${alert.timestamp || new Date().toLocaleString()}
+                    </div>
+                </div>
+            `;
+
+            container.insertBefore(alertEl, container.firstChild);
+            
+            // Update alert counter
+            document.getElementById('security-alerts').textContent = alertCount;
+            updateAlertNotification();
+            
+            // Limit displayed alerts
+            if (container.children.length > 15) {
+                container.removeChild(container.lastChild);
+            }
+
+            // Show notification sound (optional)
+            playAlertSound();
+        }
+
+        function updateAlertNotification() {
+            const notification = document.getElementById('alert-notification');
+            if (alertCount > 0) {
+                notification.textContent = alertCount;
+                notification.style.display = 'block';
+            } else {
+                notification.style.display = 'none';
+            }
+        }
+
+        function updateSecurityStatus(isSecure) {
+            const statusEl = document.getElementById('security-status');
+            if (isSecure) {
+                statusEl.innerHTML = '<i class="bi bi-shield-check"></i> Secure';
+                statusEl.className = 'badge bg-success text-white me-3';
+            } else {
+                statusEl.innerHTML = '<i class="bi bi-shield-exclamation"></i> Alert Active';
+                statusEl.className = 'badge bg-danger text-white me-3 pulse';
+            }
+        }
+
+        function clearSecurityAlerts() {
+            const container = document.getElementById('security-alerts-log');
+            container.innerHTML = `
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-shield-check"></i> No security alerts
+                </div>
+            `;
+            securityAlerts = [];
+            alertCount = 0;
+            document.getElementById('security-alerts').textContent = '0';
+            updateAlertNotification();
+            updateSecurityStatus(true);
+        }
+
+        function playAlertSound() {
+            // Optional: Play alert sound
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+Dws2YbBqf+/5H/H5+J0mKH+T8+CY87mYpKnN+6ZBnJFtpTnOjIkDQVhAn5lP/7+n6l/bfIm4r7STwLhUmbilCD3bNfFLJItpnqxYwxE1pbtJfNhzEKTwn8kv/8/ICl/LnIm4v7STsKhU2biluZ4bJbFb9t+vRUNkJK+lGEwf8LjgF4CpJK+jfhSjbvIqhDLzxRhj/hO3jnYwO9HE8sKY5RpHQv+tHARk4DF1O48Vx8iEFKqRhSmQmczAo6YU5LjEpQfIJOYM5Gl5wbSkqYhJBZihL7Y/O1QoU6VRgQKzFIZkYSQjANfREEOLYHNS0lX/wOFUbYjcaKEH8fCNZkXlAl/L7X2bPRjhKaI2XJ7YrR4Y8+SRlzpXNHK02U0w5BXJA+3Z5TzEkrAGnwbxQ1R7HKf0Cf0wqkGgXhNYf0aIYz2z0EYCG6iT14FzU1Qvp2iQ4eAI5n0c6bKM4wKjvjuBdGO8hI4fh8LLKKBrJ/YAVJ/AuOKKAT2A8sI15L9Pxt6Z1HT2Q4zFT7YcdQIpJ9JzF1QYY4xQD0iEGnlkG8vM3GyVe5UjvBQUJEUnJjJ0SnmCrGKI4lqH4N9z3tNzHT4TYH5yT4YUBVyoq5ZcXJ8KcWVKa+DfLCfRcyVEgpGnGl/KScK7qhCnNeLs4F2L1RU/RvJjOfb0i6DnNGJxE/YGNl6vVr7nS2nGl6GGrREPQy2bPLvC45x3yIcj5+2E2HnGl6FE3Ru1+nGaF4BZyHI7o46NzKj6TGWBzJrQVFtKn+ynZ8yOr+f2j3U8gq3UE6ZZN7VRhPcG+1FEe78LBN3hRPJJSEP6qjDJNpfJ+Vu5KS+DfUtCnkrRhFrGzHOq7P7qUf5xONR3yQKJnPfXLafKKHHGF3L7TGSM8T1K7LjhIYz0EmE6YNf9jKgVLVUQQMW/L2KUMRdNUGLrGlyUY9yqlXEy+f0c5v+oFcRMGlNpJWKo5V+T3zMVhKBi4V2tEvjlA5CcQAA');
+                audio.play();
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        // NEW: Security Alerts Table Functions
+        async function fetchSecurityAlertsTable() {
+            try {
+                const response = await fetch('/security-alerts');
+                const alerts = await response.json();
+                updateSecurityAlertsTable(alerts);
+                
+                // Update total counter
+                document.getElementById('total-security-alerts').textContent = `Total: ${alerts.length} alerts`;
+                
+            } catch (error) {
+                console.error('Error fetching security alerts table:', error);
+            }
+        }
+
+        function updateSecurityAlertsTable(alerts) {
+            const tableBody = document.getElementById('security-alerts-table');
+            
+            if (alerts.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-5">
+                            <i class="bi bi-shield-check" style="font-size: 3rem; color: #28a745;"></i>
+                            <div class="mt-3">
+                                <h6>No security alerts recorded</h6>
+                                <small class="text-muted">All exit attempts have been authorized</small>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = alerts.reverse().map((alert, index) => {
+                // Determine alert level styling
+                let rowClass = '';
+                let badgeClass = 'alert-badge-standard';
+                let statusIcon = '<i class="bi bi-exclamation-triangle text-warning"></i>';
+                
+                if (alert['Alert Type'].includes('CRITICAL')) {
+                    rowClass = 'security-row-critical';
+                    badgeClass = 'alert-badge-critical';
+                    statusIcon = '<i class="bi bi-shield-x text-danger"></i>';
+                } else if (alert['Alert Type'].includes('HIGH_PRIORITY')) {
+                    rowClass = 'security-row-high';
+                    badgeClass = 'alert-badge-high';
+                    statusIcon = '<i class="bi bi-shield-exclamation text-danger"></i>';
+                } else {
+                    rowClass = 'security-row-standard';
+                    badgeClass = 'alert-badge-standard';
+                    statusIcon = '<i class="bi bi-exclamation-triangle text-warning"></i>';
+                }
+
+                return `
+                    <tr class="${rowClass}">
+                        <td>
+                            <small class="text-muted">${alert['Timestamp']}</small>
+                        </td>
+                        <td>
+                            <strong class="text-danger">${alert['Plate Number']}</strong>
+                        </td>
+                        <td>
+                            <span class="badge ${badgeClass}">
+                                ${alert['Alert Type'].replace('_', ' ')}
+                            </span>
+                        </td>
+                        <td>
+                            <small>${alert['Action Taken']}</small>
+                        </td>
+                        <td>
+                            <span class="badge ${alert['Personnel Notified'] === 'YES' ? 'bg-success' : 'bg-secondary'}">
+                                ${alert['Personnel Notified'] === 'YES' ? 'Notified' : 'Pending'}
+                            </span>
+                        </td>
+                        <td>
+                            ${statusIcon}
+                            <small class="ms-1">${alert['Status']}</small>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" onclick="viewAlertDetails(${index})">
+                                <i class="bi bi-eye"></i> Details
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function viewAlertDetails(index) {
+            // Implement alert details modal
+            alert(`Viewing details for security alert #${index + 1}`);
+        }
+
+        function clearSecurityTable() {
+            if (confirm('Are you sure you want to clear all security alerts? This action cannot be undone.')) {
+                // In a real implementation, this would make an API call to clear the alerts
+                const tableBody = document.getElementById('security-alerts-table');
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-5">
+                            <i class="bi bi-shield-check" style="font-size: 3rem; color: #28a745;"></i>
+                            <div class="mt-3">
+                                <h6>All security alerts cleared</h6>
+                                <small class="text-muted">System is now in secure state</small>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                document.getElementById('total-security-alerts').textContent = 'Total: 0 alerts';
+                updateSecurityStatus(true);
+            }
         }
 
         // Add activity item
@@ -379,7 +917,8 @@
                 'ENTRY': '<i class="bi bi-arrow-right-circle-fill text-primary"></i>',
                 'PAYMENT': '<i class="bi bi-credit-card-fill text-success"></i>',
                 'EXIT': '<i class="bi bi-arrow-left-circle-fill text-info"></i>',
-                'ALERT': '<i class="bi bi-exclamation-triangle-fill text-warning"></i>'
+                'ALERT': '<i class="bi bi-exclamation-triangle-fill text-warning"></i>',
+                'SECURITY_ALERT': '<i class="bi bi-shield-exclamation text-danger"></i>'
             };
             return icons[type] || icons['INFO'];
         }
@@ -389,8 +928,37 @@
             await Promise.all([
                 fetchVehiclesInside(),
                 fetchTransactions(),
-                fetchSystemLogs()
+                fetchSystemLogs(),
+                fetchSecurityAlerts(),
+                fetchSecurityAlertsTable()  // NEW: Fetch security table data
             ]);
+        }
+
+        async function fetchSecurityAlerts() {
+            try {
+                const response = await fetch('/security-alerts');
+                const alerts = await response.json();
+                
+                alertCount = alerts.length;
+                document.getElementById('security-alerts').textContent = alertCount;
+                updateAlertNotification();
+                
+                if (alertCount > 0) {
+                    updateSecurityStatus(false);
+                    alerts.reverse().forEach(alert => {
+                        const securityAlert = {
+                            plate: alert['Plate Number'],
+                            type: alert['Alert Type'],
+                            details: alert['Action Taken'],
+                            timestamp: alert['Timestamp'],
+                            status: 'ERROR'
+                        };
+                        addSecurityAlert(securityAlert);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching security alerts:', error);
+            }
         }
 
         async function fetchVehiclesInside() {
@@ -430,7 +998,7 @@
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="3" class="text-center text-muted py-4">
-                            <i class="bi bi-car-front"></i> No vehicles inside
+                            <i class="bi bi-car-front"></i> No vehicles inside parking
                         </td>
                     </tr>
                 `;
@@ -440,7 +1008,9 @@
             tableBody.innerHTML = vehicles.map(vehicle => `
                 <tr>
                     <td><strong>${vehicle.plate}</strong></td>
-                    <td>${vehicle.duration_hours}h</td>
+                    <td>
+                        <span class="badge bg-info text-white">${vehicle.duration_hours}h</span>
+                    </td>
                     <td>
                         <span class="badge ${vehicle.payment_status === 'Paid' ? 'bg-success' : 'bg-warning text-dark'}">
                             ${vehicle.payment_status}
@@ -510,7 +1080,9 @@
                             </span>
                         </td>
                         <td>${log['Timestamp']}</td>
-                        <td>${duration}</td>
+                        <td>
+                            <span class="badge bg-secondary">${duration}</span>
+                        </td>
                         <td>
                             <button class="btn btn-sm btn-outline-primary" onclick="viewDetails('${log['Plate Number']}')">
                                 <i class="bi bi-eye"></i> View
@@ -535,6 +1107,9 @@
         // Event listeners
         document.getElementById('refresh-inside').addEventListener('click', fetchVehiclesInside);
         document.getElementById('refresh-logs').addEventListener('click', fetchAllData);
+        document.getElementById('clear-alerts').addEventListener('click', clearSecurityAlerts);
+        document.getElementById('refresh-security-table').addEventListener('click', fetchSecurityAlertsTable);
+        document.getElementById('clear-security-table').addEventListener('click', clearSecurityTable);
 
         // Initial load and periodic updates
         document.addEventListener('DOMContentLoaded', () => {
