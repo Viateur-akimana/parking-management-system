@@ -21,3 +21,5 @@
 2025-06-02 15:56:43 - RAD667J - SUCCESS: Charged 500 RWF for 0:50:00 parking, Balance: 9000 → 8500 RWF
 2025-06-02 15:56:56 - RAD667J - NO_PARKING_SESSIONS: No unpaid sessions found
 2025-06-02 16:00:03 - RAD667J - NO_PARKING_SESSIONS: No unpaid sessions found
+2025-06-02 17:57:50 - RAD667J - SUCCESS: Charged 500 RWF for 0:05:00 parking, Balance: 9000 → 8500 RWF
+2025-06-02 17:59:22 - RAD667J - SUCCESS: Charged 1500 RWF for 2:53:00 parking, Balance: 9000 → 7500 RWF
