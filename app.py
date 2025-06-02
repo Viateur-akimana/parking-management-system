@@ -22,7 +22,6 @@ system_stats = {
     "vehicles_inside": 0,
     "paid_vehicles": 0,
     "pending_payments": 0,
-    "total_revenue": 0,
     "vehicles_exited": 0,
     "active_sessions": 0,
     "hourly_rate": 200
@@ -90,21 +89,7 @@ def update_system_stats():
         # Calculate vehicles still inside
         vehicles_inside = len(vehicles - exited_vehicles)
         
-        # Calculate revenue from payment log
-        revenue = 0
-        if os.path.exists(PAYMENT_LOG):
-            with open(PAYMENT_LOG, 'r') as f:
-                for line in f:
-                    if "SUCCESS" in line and "Old Balance:" in line and "New Balance:" in line:
-                        try:
-                            old_match = re.search(r'Old Balance: (\d+)', line)
-                            new_match = re.search(r'New Balance: (\d+)', line)
-                            if old_match and new_match:
-                                old_bal = int(old_match.group(1))
-                                new_bal = int(new_match.group(1))
-                                revenue += (old_bal - new_bal)
-                        except:
-                            continue
+      
         
         # Calculate active sessions (vehicles inside with pending payments)
         active_sessions = 0
@@ -124,7 +109,6 @@ def update_system_stats():
             "vehicles_inside": vehicles_inside,
             "paid_vehicles": paid_count,
             "pending_payments": pending_count,
-            "total_revenue": revenue,
             "vehicles_exited": len(exited_vehicles),
             "active_sessions": active_sessions
         })

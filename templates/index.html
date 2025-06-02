@@ -149,15 +149,7 @@
                     <small class="text-muted">Pending Payment</small>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="stats-card text-center">
-                    <div class="stat-icon bg-success mx-auto mb-3">
-                        <i class="bi bi-currency-dollar"></i>
-                    </div>
-                    <h3 id="total-revenue" class="mb-1">0</h3>
-                    <small class="text-muted">Revenue (RWF)</small>
-                </div>
-            </div>
+
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="stats-card text-center">
                     <div class="stat-icon bg-secondary mx-auto mb-3">
@@ -336,7 +328,6 @@
             document.getElementById('vehicles-inside').textContent = stats.vehicles_inside || 0;
             document.getElementById('paid-vehicles').textContent = stats.paid_vehicles || 0;
             document.getElementById('pending-payments').textContent = stats.pending_payments || 0;
-            document.getElementById('total-revenue').textContent = stats.total_revenue || 0;
             document.getElementById('vehicles-exited').textContent = stats.vehicles_exited || 0;
         }
 
