@@ -134,6 +134,33 @@ def initialize_camera():
     print("[CAMERA] ❌ No working cameras found for exit")
     return None, -1
 
+# ===== Log Exit to CSV =====
+def log_exit_to_csv(plate_number):
+    """Log vehicle exit to exit_log.csv"""
+    try:
+        # Get entry time from plates_log.csv
+        entry_time = None
+        with open('plates_log.csv', 'r') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row['Plate Number'] == plate_number:
+                    entry_time = row['Timestamp']
+                    break
+        
+        if entry_time:
+            exit_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            entry_dt = datetime.strptime(entry_time, '%Y-%m-%d %H:%M:%S')
+            exit_dt = datetime.strptime(exit_time, '%Y-%m-%d %H:%M:%S')
+            duration = str(exit_dt - entry_dt).split('.')[0]
+            
+            with open('exit_log.csv', 'a', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow([plate_number, entry_time, exit_time, duration, 0])
+                
+            print(f"[EXIT LOGGED] {plate_number} logged to exit_log.csv")
+    except Exception as e:
+        print(f"[ERROR] Failed to log exit: {e}")
+
 # Initialize webcam
 cap, camera_index = initialize_camera()
 
@@ -229,6 +256,7 @@ while True:
                                 # Log successful exit
                                 timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                                 print(f"[EXIT LOGGED] {most_common} exited at {timestamp}")
+                                log_exit_to_csv(most_common)
                                 
                             else:
                                 print(f"[ACCESS DENIED] {most_common} - Payment required")

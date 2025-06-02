@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parking Management System</title>
+    <title>Smart Parking Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
@@ -12,161 +12,211 @@
             --error: #dc3545;
             --warning: #fd7e14;
             --info: #17a2b8;
+            --primary: #007bff;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
         }
-        .card {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            padding: 20px;
             margin-bottom: 20px;
-            border: none;
+            transition: transform 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
         }
         .log-container {
-            height: 300px;
+            height: 350px;
             overflow-y: auto;
-            background-color: #f8f9fa;
-            border-radius: 5px;
+            background: white;
+            border-radius: 10px;
             padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .log-entry {
-            padding: 8px 12px;
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
             margin-bottom: 8px;
+            border-radius: 8px;
             border-left: 4px solid;
-            background-color: white;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: #f8f9fa;
+            transition: all 0.3s ease;
         }
-        .log-success {
-            border-left-color: var(--success);
+        .activity-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
         }
-        .log-error {
-            border-left-color: var(--error);
+        .activity-entry { border-left-color: var(--primary); }
+        .activity-payment { border-left-color: var(--success); }
+        .activity-exit { border-left-color: var(--info); }
+        .activity-alert { border-left-color: var(--error); }
+        
+        .status-success { color: var(--success); }
+        .status-error { color: var(--error); }
+        .status-warning { color: var(--warning); }
+        .status-info { color: var(--info); }
+        
+        .pulse {
+            animation: pulse 2s infinite;
         }
-        .log-warning {
-            border-left-color: var(--warning);
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
-        .log-info {
-            border-left-color: var(--info);
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
         }
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        .badge-success {
-            background-color: rgba(40, 167, 69, 0.2);
-            color: var(--success);
-        }
-        .badge-danger {
-            background-color: rgba(220, 53, 69, 0.2);
-            color: var(--error);
-        }
-        .badge-warning {
-            background-color: rgba(253, 126, 20, 0.2);
-            color: var(--warning);
-        }
-        .table-responsive {
+        
+        .table-container {
             max-height: 400px;
             overflow-y: auto;
-        }
-        .blink {
-            animation: blink-animation 1s steps(2, start) infinite;
-        }
-        @keyframes blink-animation {
-            to { opacity: 0.5; }
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">
-                <i class="bi bi-p-square-fill text-primary"></i> Parking Management System
-            </h1>
-            <div id="connection-status" class="status-badge badge-warning">
-                <i class="bi bi-circle-fill"></i> Connecting...
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-car-front-fill"></i> Smart Parking System
+            </a>
+            <div class="navbar-nav ms-auto">
+                <div id="connection-status" class="badge bg-warning text-dark">
+                    <i class="bi bi-wifi"></i> Connecting...
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stats-card text-center">
+                    <div class="stat-icon bg-primary mx-auto mb-3">
+                        <i class="bi bi-car-front"></i>
+                    </div>
+                    <h3 id="total-vehicles" class="mb-1">0</h3>
+                    <small class="text-muted">Total Vehicles</small>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stats-card text-center">
+                    <div class="stat-icon bg-success mx-auto mb-3">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <h3 id="vehicles-inside" class="mb-1">0</h3>
+                    <small class="text-muted">Inside Parking</small>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stats-card text-center">
+                    <div class="stat-icon bg-info mx-auto mb-3">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <h3 id="paid-vehicles" class="mb-1">0</h3>
+                    <small class="text-muted">Paid</small>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stats-card text-center">
+                    <div class="stat-icon bg-warning mx-auto mb-3">
+                        <i class="bi bi-clock"></i>
+                    </div>
+                    <h3 id="pending-payments" class="mb-1">0</h3>
+                    <small class="text-muted">Pending Payment</small>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stats-card text-center">
+                    <div class="stat-icon bg-success mx-auto mb-3">
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <h3 id="total-revenue" class="mb-1">0</h3>
+                    <small class="text-muted">Revenue (RWF)</small>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stats-card text-center">
+                    <div class="stat-icon bg-secondary mx-auto mb-3">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </div>
+                    <h3 id="vehicles-exited" class="mb-1">0</h3>
+                    <small class="text-muted">Exited</small>
+                </div>
             </div>
         </div>
 
         <div class="row">
             <!-- Left Column -->
-            <div class="col-lg-6">
-                <!-- System Status Card -->
-                <div class="card">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="bi bi-speedometer2"></i> System Status</h5>
-                        <span id="last-update" class="text-muted small">Just now</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <h6 class="text-muted">Plate Number</h6>
-                                    <h4 id="plate-number" class="fw-bold">-</h4>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <h6 class="text-muted">Current Balance</h6>
-                                    <h4 id="current-balance" class="fw-bold">-</h4>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <h6 class="text-muted">Payment Status</h6>
-                                    <div id="payment-status" class="status-badge badge-info">IDLE</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="alert alert-light border mt-2">
-                            <small class="text-muted">
-                                <i class="bi bi-info-circle"></i> <span id="status-message">Waiting for RFID scans...</span>
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Real-time Logs Card -->
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="bi bi-activity"></i> Real-time Activity</h5>
+            <div class="col-lg-4">
+                <!-- Real-time Activities -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="mb-0">
+                            <i class="bi bi-activity text-primary"></i> 
+                            Real-time Activities
+                        </h5>
                     </div>
                     <div class="card-body p-0">
-                        <div class="log-container" id="realtime-logs">
+                        <div class="log-container" id="activities-log">
                             <div class="text-center text-muted py-4">
-                                <i class="bi bi-arrow-repeat"></i> Waiting for activity...
+                                <i class="bi bi-hourglass-split"></i> Waiting for activities...
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column -->
-            <div class="col-lg-6">
-                <!-- Detection Logs Card -->
-                <div class="card">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="bi bi-list-check"></i> Detection Logs</h5>
-                        <button id="refresh-logs" class="btn btn-sm btn-outline-secondary">
-                            <i class="bi bi-arrow-clockwise"></i> Refresh
+            <!-- Middle Column -->
+            <div class="col-lg-4">
+                <!-- Vehicles Inside -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0 d-flex justify-content-between">
+                        <h5 class="mb-0">
+                            <i class="bi bi-car-front text-success"></i> 
+                            Vehicles Inside
+                        </h5>
+                        <button id="refresh-inside" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     </div>
                     <div class="card-body p-0">
-                        <div class="table-responsive">
+                        <div class="table-container">
                             <table class="table table-hover mb-0">
-                                <thead class="table-light">
+                                <thead class="table-light sticky-top">
                                     <tr>
-                                        <th>Plate Number</th>
+                                        <th>Plate</th>
+                                        <th>Duration</th>
                                         <th>Status</th>
-                                        <th>Timestamp</th>
                                     </tr>
                                 </thead>
-                                <tbody id="logs-table">
+                                <tbody id="vehicles-inside-table">
                                     <tr>
                                         <td colspan="3" class="text-center text-muted py-4">
-                                            Loading detection logs...
+                                            Loading...
                                         </td>
                                     </tr>
                                 </tbody>
@@ -174,17 +224,65 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Transaction History Card -->
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Transaction History</h5>
+            <!-- Right Column -->
+            <div class="col-lg-4">
+                <!-- Recent Transactions -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="mb-0">
+                            <i class="bi bi-credit-card text-warning"></i> 
+                            Recent Transactions
+                        </h5>
                     </div>
                     <div class="card-body p-0">
-                        <div class="log-container" id="transaction-logs">
+                        <div class="log-container" id="transactions-log">
                             <div class="text-center text-muted py-4">
-                                <i class="bi bi-arrow-repeat"></i> Loading transaction history...
+                                <i class="bi bi-receipt"></i> Loading transactions...
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detection Logs Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 d-flex justify-content-between">
+                        <h5 class="mb-0">
+                            <i class="bi bi-list-check text-info"></i> 
+                            System Logs
+                        </h5>
+                        <div>
+                            <button id="refresh-logs" class="btn btn-sm btn-outline-primary me-2">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh
+                            </button>
+                            <span id="last-update" class="text-muted small">Just now</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-container">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light sticky-top">
+                                    <tr>
+                                        <th>Plate Number</th>
+                                        <th>Payment Status</th>
+                                        <th>Entry Time</th>
+                                        <th>Duration</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="system-logs-table">
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-4">
+                                            Loading system logs...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -199,218 +297,264 @@
         const socket = io();
         let isConnected = false;
 
-        // Connection status handling
+        // Connection status
         socket.on('connect', () => {
             isConnected = true;
-            updateConnectionStatus('Connected', 'badge-success');
-            console.log('Connected to server');
+            updateConnectionStatus('Connected', 'bg-success');
+            fetchAllData();
         });
 
         socket.on('disconnect', () => {
             isConnected = false;
-            updateConnectionStatus('Disconnected', 'badge-danger blink');
-            console.log('Disconnected from server');
-        });
-
-        socket.on('connect_error', () => {
-            updateConnectionStatus('Connection Error', 'badge-danger');
+            updateConnectionStatus('Disconnected', 'bg-danger pulse');
         });
 
         function updateConnectionStatus(text, className) {
             const statusEl = document.getElementById('connection-status');
-            statusEl.innerHTML = `<i class="bi bi-circle-fill"></i> ${text}`;
-            statusEl.className = `status-badge ${className}`;
+            statusEl.innerHTML = `<i class="bi bi-wifi"></i> ${text}`;
+            statusEl.className = `badge text-white ${className}`;
         }
 
-        // Handle real-time transaction updates
+        // Handle real-time updates
+        socket.on('stats_update', (stats) => {
+            updateStatsDisplay(stats);
+        });
+
+        socket.on('new_activity', (activity) => {
+            addActivityItem(activity);
+            updateLastUpdateTime();
+        });
+
         socket.on('new_transaction', (data) => {
+            addTransactionItem(data.log);
             updateLastUpdateTime();
-            addLogEntry(data.log, data.type || 'payment');
-            
-            // Extract information from log message
-            const logParts = data.log.split(' - ');
-            if (logParts.length >= 3) {
-                const plateInfo = logParts[1].split(':')[0];
-                const statusInfo = logParts[2];
-                
-                // Update status panel
-                document.getElementById('plate-number').textContent = plateInfo || '-';
-                
-                // Extract balance if available
-                const balanceMatch = statusInfo.match(/Balance: (\d+)/);
-                if (balanceMatch) {
-                    document.getElementById('current-balance').textContent = balanceMatch[1] + ' RWF';
-                }
-                
-                // Update payment status
-                const statusEl = document.getElementById('payment-status');
-                if (statusInfo.includes('SUCCESS')) {
-                    statusEl.className = 'status-badge badge-success';
-                    statusEl.innerHTML = '<i class="bi bi-check-circle"></i> SUCCESS';
-                } else if (statusInfo.includes('ERROR') || statusInfo.includes('FAILED')) {
-                    statusEl.className = 'status-badge badge-danger';
-                    statusEl.innerHTML = '<i class="bi bi-x-circle"></i> ERROR';
-                } else if (statusInfo.includes('INSUFFICIENT')) {
-                    statusEl.className = 'status-badge badge-warning';
-                    statusEl.innerHTML = '<i class="bi bi-exclamation-triangle"></i> INSUFFICIENT';
-                } else {
-                    statusEl.className = 'status-badge badge-info';
-                    statusEl.innerHTML = '<i class="bi bi-info-circle"></i> PROCESSING';
-                }
-                
-                document.getElementById('status-message').textContent = statusInfo;
-            }
         });
 
-        // Handle log updates
-        socket.on('log_update', () => {
-            updateLastUpdateTime();
-            fetchDetectionLogs();
-        });
+        // Update statistics display
+        function updateStatsDisplay(stats) {
+            document.getElementById('total-vehicles').textContent = stats.total_vehicles || 0;
+            document.getElementById('vehicles-inside').textContent = stats.vehicles_inside || 0;
+            document.getElementById('paid-vehicles').textContent = stats.paid_vehicles || 0;
+            document.getElementById('pending-payments').textContent = stats.pending_payments || 0;
+            document.getElementById('total-revenue').textContent = stats.total_revenue || 0;
+            document.getElementById('vehicles-exited').textContent = stats.vehicles_exited || 0;
+        }
 
-        // Add new log entry
-        function addLogEntry(text, type = 'payment') {
-            const containerId = type === 'payment' ? 'realtime-logs' : 'transaction-logs';
-            const container = document.getElementById(containerId);
+        // Add activity item
+        function addActivityItem(activity) {
+            const container = document.getElementById('activities-log');
             
-            // Remove placeholder if exists
             if (container.children.length === 1 && container.children[0].classList.contains('text-center')) {
                 container.innerHTML = '';
             }
+
+            const activityEl = document.createElement('div');
+            activityEl.className = `activity-item activity-${activity.type.toLowerCase()}`;
             
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
+            const statusIcon = getStatusIcon(activity.status);
+            const typeIcon = getTypeIcon(activity.type);
             
-            // Determine log type and styling
-            if (text.includes('SUCCESS')) {
-                entry.classList.add('log-success');
-            } else if (text.includes('ERROR') || text.includes('FAILED')) {
-                entry.classList.add('log-error');
-            } else if (text.includes('INSUFFICIENT')) {
-                entry.classList.add('log-warning');
-            } else {
-                entry.classList.add('log-info');
-            }
-            
-            entry.innerHTML = `
-                <div class="d-flex justify-content-between">
-                    <span>${text}</span>
-                    <small class="text-muted">${new Date().toLocaleTimeString()}</small>
+            activityEl.innerHTML = `
+                <div class="me-3">${typeIcon}</div>
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between">
+                        <strong>${activity.plate}</strong>
+                        <span class="status-${activity.status.toLowerCase()}">${statusIcon}</span>
+                    </div>
+                    <small class="text-muted">${activity.details}</small>
+                    <div class="text-muted small">${activity.timestamp}</div>
                 </div>
             `;
+
+            container.insertBefore(activityEl, container.firstChild);
             
-            container.insertBefore(entry, container.firstChild);
-            
-            // Limit to 100 entries
-            if (container.children.length > 100) {
+            if (container.children.length > 20) {
                 container.removeChild(container.lastChild);
             }
         }
 
-        // Fetch detection logs from server
-        async function fetchDetectionLogs() {
+        function getStatusIcon(status) {
+            const icons = {
+                'SUCCESS': '<i class="bi bi-check-circle-fill"></i>',
+                'ERROR': '<i class="bi bi-x-circle-fill"></i>',
+                'WARNING': '<i class="bi bi-exclamation-triangle-fill"></i>',
+                'INFO': '<i class="bi bi-info-circle-fill"></i>'
+            };
+            return icons[status] || icons['INFO'];
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                'ENTRY': '<i class="bi bi-arrow-right-circle-fill text-primary"></i>',
+                'PAYMENT': '<i class="bi bi-credit-card-fill text-success"></i>',
+                'EXIT': '<i class="bi bi-arrow-left-circle-fill text-info"></i>',
+                'ALERT': '<i class="bi bi-exclamation-triangle-fill text-warning"></i>'
+            };
+            return icons[type] || icons['INFO'];
+        }
+
+        // Fetch and display data
+        async function fetchAllData() {
+            await Promise.all([
+                fetchVehiclesInside(),
+                fetchTransactions(),
+                fetchSystemLogs()
+            ]);
+        }
+
+        async function fetchVehiclesInside() {
             try {
-                const response = await fetch('/logs');
-                const logs = await response.json();
-                updateLogsTable(logs);
+                const response = await fetch('/vehicles/inside');
+                const vehicles = await response.json();
+                updateVehiclesInsideTable(vehicles);
             } catch (error) {
-                console.error('Error fetching detection logs:', error);
+                console.error('Error fetching vehicles inside:', error);
             }
         }
 
-        // Fetch transaction history from server
-        async function fetchTransactionHistory() {
+        async function fetchTransactions() {
             try {
                 const response = await fetch('/transactions');
                 const transactions = await response.json();
-                updateTransactionLogs(transactions);
+                updateTransactionsDisplay(transactions);
             } catch (error) {
-                console.error('Error fetching transaction history:', error);
+                console.error('Error fetching transactions:', error);
             }
         }
 
-        // Update logs table
-        function updateLogsTable(logs) {
-            const tableBody = document.getElementById('logs-table');
+        async function fetchSystemLogs() {
+            try {
+                const response = await fetch('/logs');
+                const logs = await response.json();
+                updateSystemLogsTable(logs);
+            } catch (error) {
+                console.error('Error fetching system logs:', error);
+            }
+        }
+
+        function updateVehiclesInsideTable(vehicles) {
+            const tableBody = document.getElementById('vehicles-inside-table');
             
-            if (logs.length === 0) {
+            if (vehicles.length === 0) {
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="3" class="text-center text-muted py-4">
-                            No detection logs found
+                            <i class="bi bi-car-front"></i> No vehicles inside
                         </td>
                     </tr>
                 `;
                 return;
             }
-            
-            tableBody.innerHTML = logs.map(log => `
+
+            tableBody.innerHTML = vehicles.map(vehicle => `
                 <tr>
-                    <td>${log['Plate Number'] || 'N/A'}</td>
+                    <td><strong>${vehicle.plate}</strong></td>
+                    <td>${vehicle.duration_hours}h</td>
                     <td>
-                        ${log['Payment Status'] === '1' ? 
-                            '<span class="badge bg-success">Paid</span>' : 
-                            '<span class="badge bg-warning">Pending</span>'}
+                        <span class="badge ${vehicle.payment_status === 'Paid' ? 'bg-success' : 'bg-warning text-dark'}">
+                            ${vehicle.payment_status}
+                        </span>
                     </td>
-                    <td>${log['Timestamp'] || 'N/A'}</td>
                 </tr>
             `).join('');
         }
 
-        // Update transaction logs
-        function updateTransactionLogs(transactions) {
-            const container = document.getElementById('transaction-logs');
+        function updateTransactionsDisplay(transactions) {
+            const container = document.getElementById('transactions-log');
             
             if (transactions.length === 0) {
                 container.innerHTML = `
                     <div class="text-center text-muted py-4">
-                        No transaction history found
+                        <i class="bi bi-receipt"></i> No transactions yet
                     </div>
                 `;
                 return;
             }
-            
-            container.innerHTML = transactions.map(transaction => {
-                let logClass = 'log-info';
-                if (transaction.includes('SUCCESS')) logClass = 'log-success';
-                if (transaction.includes('ERROR')) logClass = 'log-error';
-                if (transaction.includes('INSUFFICIENT')) logClass = 'log-warning';
-                
+
+            container.innerHTML = transactions.slice(-10).reverse().map(transaction => {
+                let statusClass = 'info';
+                if (transaction.includes('SUCCESS')) statusClass = 'success';
+                if (transaction.includes('ERROR')) statusClass = 'error';
+                if (transaction.includes('INSUFFICIENT')) statusClass = 'warning';
+
                 return `
-                    <div class="log-entry ${logClass}">
-                        <div class="d-flex justify-content-between">
-                            <span>${transaction}</span>
-                            <small class="text-muted">${transaction.split(' - ')[0] || ''}</small>
+                    <div class="activity-item">
+                        <div class="me-3">
+                            <i class="bi bi-credit-card-fill text-${statusClass}"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <small>${transaction}</small>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        // Update last update time
+        function updateSystemLogsTable(logs) {
+            const tableBody = document.getElementById('system-logs-table');
+            
+            if (logs.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            No system logs found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = logs.map(log => {
+                const entryTime = new Date(log['Timestamp']);
+                const now = new Date();
+                const duration = Math.floor((now - entryTime) / (1000 * 60 * 60 * 24)) + 'd ' + 
+                                Math.floor(((now - entryTime) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + 'h';
+
+                return `
+                    <tr>
+                        <td><strong>${log['Plate Number']}</strong></td>
+                        <td>
+                            <span class="badge ${log['Payment Status'] === '1' ? 'bg-success' : 'bg-warning text-dark'}">
+                                ${log['Payment Status'] === '1' ? 'Paid' : 'Pending'}
+                            </span>
+                        </td>
+                        <td>${log['Timestamp']}</td>
+                        <td>${duration}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewDetails('${log['Plate Number']}')">
+                                <i class="bi bi-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
         function updateLastUpdateTime() {
             const now = new Date();
             document.getElementById('last-update').textContent = 
                 `Last update: ${now.toLocaleTimeString()}`;
         }
 
-        // Manual refresh button
-        document.getElementById('refresh-logs').addEventListener('click', () => {
-            fetchDetectionLogs();
-            fetchTransactionHistory();
-            updateLastUpdateTime();
-        });
+        function viewDetails(plateNumber) {
+            alert(`Viewing details for ${plateNumber}`);
+            // Implement detailed view modal
+        }
 
-        // Initial load
+        // Event listeners
+        document.getElementById('refresh-inside').addEventListener('click', fetchVehiclesInside);
+        document.getElementById('refresh-logs').addEventListener('click', fetchAllData);
+
+        // Initial load and periodic updates
         document.addEventListener('DOMContentLoaded', () => {
-            fetchDetectionLogs();
-            fetchTransactionHistory();
+            if (isConnected) {
+                fetchAllData();
+            }
             
             // Refresh data every 30 seconds
             setInterval(() => {
                 if (isConnected) {
-                    fetchDetectionLogs();
-                    fetchTransactionHistory();
+                    fetchAllData();
                 }
             }, 30000);
         });
